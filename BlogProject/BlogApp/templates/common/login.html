@@ -1,0 +1,46 @@
+{% extends 'common/master.html' %}
+
+
+
+
+
+{% block body %}
+
+
+<div class="container mt-5 mb-3">
+    <h2 class="text-center text-light bg-primary rounded py-3 my-2">Login to Enter your Profile</h2>
+    {% include 'layouts/messages.html' %}
+    <form action="" id="signupForm" method="POST" class="p-4 border rounded bg-light shadow">
+        {% csrf_token %}
+        
+        <!-- Username Field -->
+        <div class="mb-3">
+            <label for="username" class="form-label">Username:</label>
+            <input type="text" id="username" name="username" class="form-control" required>
+        </div>
+
+        <!-- Password Field -->
+        <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-dark w-100">Login Now</button>
+
+        <!-- Link to Create Account -->
+        <div class="text-center mt-3">
+            Not have an Account? <a href="{% url 'register' %}">Create an Account</a>
+        </div>
+    </form>
+</div>
+
+
+
+
+
+
+    
+{% endblock body %}
+    
+

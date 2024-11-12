@@ -1,0 +1,59 @@
+{% extends 'common/master.html' %}
+
+
+
+{% block body %}
+    
+
+<div class="container mt-5">
+    <h2 class="text-center">Trashed Posts</h2>
+    {% include 'layouts/messages.html' %}
+    
+    <!-- Check if there are any trashed posts -->
+    {% if trashed_posts %}
+        <table class="table table-bordered mt-4">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Date Trashed</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in trashed_posts %}
+                    <tr>
+                        <td>{{ post.title }}</td>
+                        <td>{{ post.category.name }}</td>
+                        <td>{{ post.updated_at|date:"M d, Y" }}</td>
+                        <td>
+                            <!-- Form to Restore Post -->
+                            <form action="{% url 'restore_post' post.id %}" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success btn-sm">Restore</button>
+                            </form>
+
+                            <!-- Form to Permanently Delete Post -->
+                            <form action="{% url 'delete_post_permanently' post.id %}" method="POST" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to permanently delete this post?');">Delete Permanently</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-center text-muted">No posts in the trash.</p>
+    {% endif %}
+    
+    <div class="text-center mt-3">
+        <a href="{% url 'manage_post' %}" class="btn btn-secondary">Back to Manage Posts</a>
+    </div>
+</div>
+
+
+
+
+{% endblock body %}
+    

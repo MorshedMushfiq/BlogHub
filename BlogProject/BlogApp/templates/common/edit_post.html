@@ -1,0 +1,58 @@
+{% extends 'common/master.html' %}
+
+
+
+
+{% block body %}
+
+
+
+<div class="container mt-5">
+    <h2>Edit Post</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" name="title" value="{{ post.title }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="keywords" class="form-label">Keywords</label>
+            <input type="text" class="form-control" id="keywords" name="keywords" value="{{ post.keywords }}">
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">Content</label>
+            <textarea class="form-control" id="content" name="content" rows="5" required>{{ post.content }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">Category</label>
+            <select class="form-select" id="category" name="category">
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if category == post.category %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="post_image" class="form-label">Post Image</label>
+            <input type="file" class="form-control" id="post_image" name="post_image">
+            {% if post.post_image %}
+                <div class="mt-2">
+                    <img src="{{ post.post_image.url }}" alt="Current Image" style="max-width: 150px;">
+                    <p class="text-muted">Current image</p>
+                </div>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">Update Post</button>
+        <a href="{% url 'manage_post' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+
+
+
+
+
+    
+{% endblock body %}
+    

@@ -1,0 +1,101 @@
+{% extends 'common/master.html' %}
+
+
+{% load static %}
+
+
+
+{% block body %}
+
+<h2 class="text-center">Our Blog</h2>
+<section class="all_post section_padding">
+    
+    <div class="container">
+        
+        <div class="row">
+            
+            <div class="col-lg-8">
+                
+                <div class="row">
+
+                    
+                    {% for p in post %}
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="single_post post_1">
+                            <div class="single_post_img">
+                                <img src="{{ p.post_image.url }}" alt="{{ p.title }}" class="img-fluid">
+                            </div>
+                            <div class="single_post_text text-center">
+                                
+                                    <h5>{{ p.category.name }}</h5>
+                           
+                                <a href="{% url 'single_post' p.id %}">
+                                    <h2>{{ p.title }}</h2>
+                                </a>
+                                <p>Posted on {{ p.created_at|date:"F d, Y" }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                        
+                    {% endfor %}
+                        
+                </div>
+                <div class="page_pageniation">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="sidebar_widget">
+                    <div class="single_sidebar_wiget search_form_widget">
+                        <form action="{% url 'search_content' %}" method="GET">
+                            <div class="form-group">
+                                <input type="text" name="search" class="form-control" placeholder='Search Keyword'
+                                    onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search Keyword'">
+                                <div type="submit" class="btn_1">search</div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="single_sidebar_wiget">
+                        <div class="sidebar_tittle">
+                            <h3>Categories</h3>
+                        </div>
+                        <div class="single_catagory_item category">
+                            <ul class="list-unstyled">
+                                {% for category in categories %}
+                                    <li>
+                                        <p>{{ category.name }}</p>
+                                        <span>({{ category.post_count }})</span>
+                                    </li>
+                                {% empty %}
+                                    <li>No categories available</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+{% endblock body %}
+    
+
+
+

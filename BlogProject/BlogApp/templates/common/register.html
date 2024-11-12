@@ -1,0 +1,112 @@
+{% extends 'common/master.html' %}
+
+
+
+
+
+{% block body %}
+
+
+<div class="container mt-5 mb-3">
+    <h2 class="text-center text-light bg-info rounded py-3 my-2">Register here..</h2>
+    {% include 'layouts/messages.html' %}
+    <form action="" id="signupForm" method="POST" enctype="multipart/form-data" class="p-4 border rounded">
+        {% csrf_token %}
+        
+        <!-- First Name -->
+        <div class="mb-3">
+            <label for="first_name" class="form-label">First Name:</label>
+            <input type="text" id="first_name" name="first_name" class="form-control" required>
+        </div>
+        
+        <!-- Last Name -->
+        <div class="mb-3">
+            <label for="last_name" class="form-label">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" class="form-control" required>
+        </div>
+
+        <!-- Username -->
+        <div class="mb-3">
+            <label for="username" class="form-label">Username:</label>
+            <input type="text" id="username" name="username" class="form-control" required>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" required>
+        </div>
+
+        <!-- Age -->
+        <div class="mb-3">
+            <label for="age" class="form-label">Age:</label>
+            <input type="number" id="age" name="age" class="form-control" required>
+            <div id="ageError" class="text-danger" style="display: none;">You must be at least 18 years old to register.</div>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <input type="password" id="password" name="password" class="form-control" required>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mb-3">
+            <label for="confirm_password" class="form-label">Confirm Password:</label>
+            <input type="password" id="confirm_password" name="Confirm_password" class="form-control" required>
+        </div>
+
+        <!-- Profile Picture -->
+        <div class="mb-3">
+            <label for="profile_pic" class="form-label">Profile Picture:</label>
+            <input type="file" id="profile_pic" name="Profile_Pic" class="form-control" required>
+        </div>
+
+        <!-- Contact Number -->
+        <div class="mb-3">
+            <label for="contact_no" class="form-label">Contact Number:</label>
+            <input type="text" id="contact_no" name="contact_no" class="form-control" required>
+        </div>
+
+        <!-- Gender -->
+        <div class="mb-3">
+            <label for="gender" class="form-label">Gender:</label>
+            <select id="gender" name="gender" class="form-select" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary w-100">Register Now!</button>
+
+        <div class="text-center mt-3">
+            Already Have an Account? <a href="{% url 'loginPage' %}">Login Here</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('signupForm').addEventListener('submit', function(event) {
+        const age = document.getElementById('age').value;
+        const ageError = document.getElementById('ageError');
+        ageError.style.display = 'none';
+
+        if (age < 18) {
+            event.preventDefault();
+            ageError.style.display = 'block';
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+{% endblock body %}
+    
+

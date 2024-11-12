@@ -1,0 +1,55 @@
+{% extends 'common/master.html' %}
+
+{% load static %}
+
+
+
+{% block body %}
+
+
+
+
+<div class="container mt-5">
+    <h2 class="mb-4">Search Results for "{{ query }}"</h2>
+
+    {% if post %}
+        <div class="row">
+            {% for p in post %}
+                <div class="col-md-12 mb-4">
+                    <div class="card flex-md-row shadow-sm h-md-250">
+                        <!-- Post Image -->
+                        {% if p.post_image %}
+                            <img class="card-img-left flex-auto d-none d-md-block" style="width: 200px; height: auto;" src="{{ p.post_image.url }}" alt="Post Image">
+                        {% else %}
+                            <img class="card-img-left flex-auto d-none d-md-block" style="width: 200px; height: auto;" src="{% static 'img/default_post_image.jpg' %}" alt="Default Image">
+                        {% endif %}
+                        
+                        <div class="card-body d-flex flex-column align-items-start">
+                            <!-- Post Title -->
+                            <h3 class="mb-0">
+                                <a class="text-dark" href="{% url 'single_post' p.id %}">{{ p.title }}</a>
+                            </h3>
+                            <!-- Post Category -->
+                            <div class="mb-1 text-muted">{{ p.category.name }}</div>
+                            <!-- Post Excerpt -->
+                            <p class="card-text mb-auto">{{ p.content|truncatewords:30 }}</p>
+                            <!-- Read More Button -->
+                            <a href="{% url 'single_post' p.id  %}" class="btn btn-primary btn-sm mt-3">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No posts found matching your search criteria.</p>
+    {% endif %}
+</div>
+
+
+
+
+
+    
+{% endblock body %}
+    
+

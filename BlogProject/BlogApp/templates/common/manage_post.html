@@ -1,0 +1,52 @@
+{% extends 'common/master.html' %}
+
+
+
+{% block body %}
+    
+<div class="container mt-5">
+    <h2>Manage Your Posts</h2>
+    {% include 'layouts/messages.html' %}
+    <a class="btn btn-success btn-sm" href="{% url 'add_post' %}">Add Post</a>
+    <a class="btn btn-danger btn-sm" href="{% url 'view_trashed_posts' %}">Trash Post</a>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Post Image</th>
+                <th>Category</th>
+                <th>Created At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+            <tr>
+                <td>{{ post.title }}</td>
+                <td>
+                    <img src="/{{post.post_image}}" style="width:100px; height:100px;" alt="">
+                </td>
+                <td>{{ post.category.name }}</td>
+                <td>{{ post.created_at|date:"M-d-y H:i" }}</td>
+                <td>
+                    <a href="{% url 'single_post' post.id %}" class="btn btn-info btn-sm">View</a>
+                    <a href="{% url 'edit_post' post.id %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'trash_post' post.id %}" class="btn btn-danger btn-sm">Trash</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No posts found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+{% endblock body %}
+    

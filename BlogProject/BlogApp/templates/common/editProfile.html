@@ -1,0 +1,118 @@
+{% extends 'common/master.html' %}
+
+
+
+
+
+{% block body %}
+
+
+
+<style>
+
+    .container-editProfile {
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        width: 300px;
+        margin: 50px auto;
+
+    }
+    
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    
+    label {
+        display: block;
+        margin: 10px 0 5px;
+        color: #555;
+    }
+    
+    input, select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: border-color 0.3s;
+    }
+    
+    input:focus, select:focus {
+        border-color: #6a11cb;
+        outline: none;
+    }
+    
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: #3b5abe;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.3s;
+    }
+    
+    button:hover {
+        background-color: #2575fc;
+        transform: scale(1.05);
+    }
+    
+    .error {
+        color: red;
+        font-size: 0.8em;
+        display: none;
+    }
+</style>
+
+<div class="container-editProfile">
+        <h2>Edit Profile</h2>
+    <form action="" id="signupForm" method="POST" enctype="multipart/form-data">
+                
+        {% csrf_token %}
+
+        <label for="username">First Name:</label>
+        <input type="text" id="username" name="first_name" value="{{user.first_name}}" >
+        <label for="username">Last Name:</label>
+        <input type="text" id="username" name="last_name" value="{{user.last_name}}" >        
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" value="{{user.username}}" >
+
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{user.email}}" >
+        <label for="email">Age:</label>
+        <input type="number" id="email" name="age" value="{{user.age}}">
+
+
+        <label for="password">Profile Pic</label>
+        
+    
+            <img src="/{{user.profile_pic}}" style="width: 100px; height: 100px;" alt="">
+
+            
+        <input type="file" id="password" name="new_profile_pic" >
+        <input type="hidden" id="password" name="old_profile_pic" value="{{user.profile_pic}}" >
+
+        <label for="password">Contact Number</label>
+        <input type="text" id="password" name="contact_no" value="{{user.contact_no}}" >
+
+        <button type="submit">Update Profile</button>
+        
+        <a class="btn btn-secondary mt-3" href=" {% url 'profile' %} "> Back to Profile </a>
+    </form>
+</div>
+
+
+
+
+
+
+    
+{% endblock body %}
+    
+

@@ -1,0 +1,291 @@
+{% extends 'common/master.html' %}
+{% load static %}
+
+
+
+
+
+{% block body %}
+<style>
+   .reply-btn {
+      display: flex; /* Ensures the elements are aligned horizontally */
+      justify-content: space-between; /* Distribute space between the buttons */
+      gap: 10px; /* Optional: Adds space between the buttons */
+      align-items: center; /* Vertically align the buttons in the center */
+  }
+</style>
+
+
+
+    <!-- breadcrumb start-->
+    <section class="breadcrumb breadcrumb_bg align-items-center">
+      <div class="container">
+          <div class="row align-items-center justify-content-between">
+              <div class="col-sm-6">
+                  <div class="breadcrumb_tittle text-left">
+                      <h2>blog details</h2>
+                  </div>
+              </div>
+              <div class="col-sm-6">
+                  <div class="breadcrumb_content text-right">
+                      <p>Home<span>/</span>blog details</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+  <!-- breadcrumb start-->
+ <!--================Blog Area =================-->
+ <section class="blog_area single-post-area all_post section_padding">
+    <div class="container">
+       <div class="row">
+          <div class="col-lg-8 posts-list">
+            <div class="container">
+               <!-- Blog Author Section -->
+               <div class="blog-author">
+                   <div class="media align-items-center">
+                       <!-- Display the author's profile picture or a placeholder if not available -->
+                        {% if post.author.profile_pic %}
+                           <img src="{{ post.author.profile_pic.url }}" alt="">
+                        {% else %}
+                           <img src="{% static 'img/blog/author.png' %}" alt="">
+                        {% endif %}
+                       <div class="media-body">
+                           <a href="#">
+                               <h2>{{ post.author.username }}</h4>
+                               <h3>{{ post.title }}</h3>
+                               <ul class="blog-info-link mt-3 mb-4">
+                                   <li><a href="#"><i class="far fa-user"></i> {{ post.category.name }}</a></li>
+                                   <li><a href="#"><i class="far fa-comments"></i> {{ post.comments.count }} Comments</a></li>
+                               </ul>
+                           </a>
+                       </div>
+                   </div>
+               </div>
+           
+               <!-- Single Post Section -->
+               <div class="single-post">
+                   <div class="feature-img">
+                       <!-- Display the post's image if available -->
+                     {% if post.post_image %}
+                       <img src="{{ post.post_image.url }}" alt="">
+                    {% else %}
+                       <img src="{% static 'img/blog/author.png' %}" alt="">
+                    {% endif %}
+                   </div>
+                   <div class="blog_details">
+
+                       
+                       <p>
+                           {{ post.content }}
+                       </p>
+                   </div>
+               </div>
+           </div>
+           
+
+
+           <div class="comments-area">
+            <h4>{{ comments.count }} Comments</h4>
+            {% for comment in comments %}
+                <div class="comment-list">
+                    <div class="single-comment justify-content-between d-flex">
+                        <div class="user justify-content-between d-flex">
+                            <div class="thumb">
+                              
+                              {% if comment.user.profile_pic %}
+                                 <img src="{{ comment.user.profile_pic.url }}" alt="">
+                              {% else %}
+                              <img src="default-avatar.png" alt="">
+                              {% endif %}
+                                 
+                                
+                            </div>
+                            <div class="desc">
+                              <h5><a href="#">{{ comment.user.username }}</a></h5>
+                                <p class="comment">{{ comment.content }}</p>
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        
+                                        <p class="date">{{ comment.created_at|date:"M d, Y h:i A" }}</p>
+                                    </div>
+                                    <div class="reply-btn">
+                                        <a href="#" class="btn-reply ml-3 btn btn-success text-uppercase" onclick="showReplyForm({{ comment.id }})">reply</a>
+                                 {% if comment.user == request.user %}
+                                       <!-- Delete Button for the comment owner -->
+                                       <a href="{% url 'delete_comment' comment.id %}" class="btn btn-sm btn-danger text-light text-uppercase">Delete</a>
+                                 {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Replies Section -->
+                    <div class="reply-comments ml-4 mt-3" id="replies-{{ comment.id }}">
+                        {% for reply in comment.replies.all %}
+                            <div class="single-comment justify-content-between d-flex">
+                                <div class="user justify-content-between d-flex">
+                                    <div class="thumb">
+                                       
+                                       {% if reply.user.profile_pic %}
+                                          
+                                       <img src="{{ reply.user.profile_pic.url }}" alt="">
+                                       {% else  %}
+
+                                       <img src="default-avatar.png" alt="">
+                                       {% endif %}
+                                          
+                                        
+                                    </div>
+                                    <div class="desc">
+                                       <h5><a href="#">{{ reply.user.username }}</a></h5>
+                                        <p class="comment">{{ reply.content }}</p>
+                                        <div class="d-flex justify-content-between">
+                                            <div class="d-flex align-items-center">
+                                                
+                                                <p class="date">{{ reply.created_at|date:"M d, Y h:i A" }}</p>
+                                            </div>
+                                          {% if reply.user == request.user %}
+                                             <!-- Delete Button for the reply owner -->
+                                             <a href="{% url 'delete_reply' reply.id %}" class="btn-delete text-uppercase ml-3 btn btn-sm btn-danger text-light">Delete</a>
+                                          {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="reply-form" id="reply-form-{{ comment.id }}" style="display:none;">
+                        <textarea id="reply-content-{{ comment.id }}" class="form-control" placeholder="Write your reply here..."></textarea>
+                        <button class="btn-reply btn-primary text-uppercase" onclick="submitReply(event, {{ comment.id }})">Reply</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Comment Form -->
+        <div class="comment-form">
+            <h4>Leave a Comment</h4>
+            <form method="POST" action="{% url 'add_comment' post.id %}">
+                {% csrf_token %}
+                <textarea class="form-control w-100" name="content" cols="30" rows="9" placeholder="Write Comment"></textarea>
+                <input type="submit" class="btn_1" value="Submit">
+            </form>
+        </div>
+        
+       
+          </div>
+          <div class="col-lg-4">
+            <div class="sidebar_widget">
+                <div class="single_sidebar_wiget search_form_widget">
+                    <form action="{% url 'search_content' %}" method="GET">
+                        <div class="form-group">
+                            <input type="text" name="search" class="form-control" placeholder='Search Keyword'
+                                onfocus="this.placeholder = ''" onblur="this.placeholder = 'Search Keyword'">
+                            <div type="submit" class="btn_1">search</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="single_sidebar_wiget">
+                    <div class="sidebar_tittle">
+                        <h3>Categories</h3>
+                    </div>
+                    <div class="single_catagory_item category">
+                        <ul class="list-unstyled">
+                            {% for category in categories %}
+                                <li>
+                                    <p>{{ category.name }}</p>
+                                    <span>({{ category.post_count }})</span>
+                                </li>
+                            {% empty %}
+                                <li>No categories available</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+       </div>
+    </div>
+ </section>
+ <!--================Blog Area end =================-->
+
+ <script>
+
+      // Show the reply form for a comment
+      function showReplyForm(commentId) {
+         document.getElementById('reply-form-' + commentId).style.display = 'block';
+      }
+
+      // Submit reply to the server
+      function submitReply(event, commentId) {
+         // Prevent the page from refreshing
+         event.preventDefault();
+
+         // Get the reply content from the textarea
+         let content = document.getElementById('reply-content-' + commentId).value;
+
+         // Check if content is not empty
+         if (content.trim() === "") {
+            alert("Please write a reply before submitting.");
+            return;
+         }
+
+         // Send the reply to the server via fetch
+         fetch("{% url 'add_comment' post.id %}", {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/x-www-form-urlencoded",
+               "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: `content=${content}&parent_id=${commentId}`
+         })
+         .then(response => response.json())
+         .then(data => {
+            if (data.error) {
+               alert("Error: " + data.error);
+            } else {
+               // Append the new reply to the replies section
+               let repliesDiv = document.getElementById('replies-' + commentId);
+               let newReply = document.createElement('div');
+               newReply.classList.add('single-comment', 'justify-content-between', 'd-flex');
+               newReply.innerHTML = `
+                     <div class="user justify-content-between d-flex">
+                        <div class="thumb"><img src="default-avatar.png" alt=""></div>
+                        <div class="desc">
+                           <p class="comment">${data.content}</p>
+                           <div class="d-flex justify-content-between">
+                                 <div class="d-flex align-items-center">
+                                    <h5><a href="#">${data.username}</a></h5>
+                                    <p class="date">${data.created_at}</p>
+                                 </div>
+                           </div>
+                        </div>
+                     </div>
+               `;
+               repliesDiv.appendChild(newReply);
+
+               // Hide the reply form after submission (This line should work now)
+               let replyForm = document.getElementById('reply-form-' + commentId);
+               replyForm.style.display = 'none';  // Hide the reply form
+
+               // Optionally clear the textarea
+               document.getElementById('reply-content-' + commentId).value = '';  
+            }
+         })
+         .catch(error => {
+            console.error("Error submitting reply:", error);
+         });
+      }
+
+</script>
+
+
+
+   
+{% endblock body %}
+   
+
+
+
